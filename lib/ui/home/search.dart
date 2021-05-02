@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:grocery/blocs/search_bloc.dart';
 import 'package:grocery/models/product.dart';
+import 'package:grocery/models/category.dart';
 import 'package:grocery/models/theme_model.dart';
 import 'package:grocery/services/database.dart';
 import 'package:grocery/ui/product_details/product_details.dart';
@@ -81,13 +82,15 @@ class _SearchState extends State<Search> {
 
         /// if there is data in textField
         (searchController.text.isNotEmpty)
-            ? StreamBuilder<List<Product>>(
-                stream: widget.bloc.getSearchedProducts(searchController.text),
+            ? StreamBuilder<List<Category>>(
+                stream: widget.bloc.getSearchedCategories(searchController.text.trim()),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    List<Product> products = snapshot.data;
+                    List<Category> iCategories = snapshot.data;
 
-                    if (products.length == 0) {
+                    if (iCategories.length == 0)
+                    {
+                      // print("+" + searchController.text + "+");
                       ///If nothing found
                       return Padding(
                         padding: EdgeInsets.only(top: 50),
@@ -110,8 +113,10 @@ class _SearchState extends State<Search> {
                               ]),
                         ),
                       );
-                    } else {
-                      ///If there are products
+                    } else
+                      {
+                        print(iCategories.length);
+                      ///If there are categories
                       return GridView.count(
                         crossAxisCount: width ~/ 180,
                         shrinkWrap: true,
@@ -120,14 +125,7 @@ class _SearchState extends State<Search> {
                             left: 16, right: 16, top: 20, bottom: 80),
                         children: List.generate(snapshot.data.length, (index) {
                           return FadeIn(
-                            child: Cards.gridCard(
-                                themeModel: themeModel,
-                                product: products[index],
-                                width: width,
-                                onTap: () {
-                                  ProductDetails.create(
-                                      context, products[index]);
-                                }),
+                            child: Cards.categoryCard(context, category: iCategories[index]),
                           );
                         }),
                       );

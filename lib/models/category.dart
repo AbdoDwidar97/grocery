@@ -9,8 +9,8 @@ class Category{
 
 
 
-  factory Category.fromMap(Map data,String id){
-    return Category(title: id, image: data['image']);
+  factory Category.fromMap(Map data, String id){
+    return Category(title: data['title'], image: data['image']);
   }
 
 

@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:grocery/models/category.dart';
 import 'package:grocery/models/product.dart';
 import 'package:grocery/services/database.dart';
 
-class SearchBloc {
+class SearchBloc
+{
   final Database database;
 
   SearchBloc({@required this.database});
@@ -14,4 +17,14 @@ class SearchBloc {
             .map((snapshot) => Product.fromMap(snapshot.data(), snapshot.id))
             .toList());
   }
+
+  // categories
+  Stream<List<Category>> getSearchedCategories(String data)
+  {
+    return database.getSearchedDataFromCollection('categories', data).map(
+            (snapshots) => snapshots.docs
+            .map((snapshot) => Category.fromMap(snapshot.data(), snapshot.id))
+            .toList());
+  }
+
 }
